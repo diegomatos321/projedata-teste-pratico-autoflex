@@ -1,21 +1,66 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import DashboardPage from '@/pages/DashboardPage.vue'
+import ProductsListPage from '@/pages/products/ProductsListPage.vue'
+import ProductFormPage from '@/pages/products/ProductFormPage.vue'
+import ProductBomPage from '@/pages/products/ProductBomPage.vue'
+import RawMaterialsListPage from '@/pages/raw-materials/RawMaterialsListPage.vue'
+import RawMaterialFormPage from '@/pages/raw-materials/RawMaterialFormPage.vue'
+import ProductionPage from '@/pages/ProductionPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      component: AppLayout,
+      children: [
+        {
+          path: '',
+          name: 'dashboard',
+          component: DashboardPage,
+        },
+        {
+          path: 'products',
+          name: 'products',
+          component: ProductsListPage,
+        },
+        {
+          path: 'products/new',
+          name: 'products-new',
+          component: ProductFormPage,
+        },
+        {
+          path: 'products/:id/edit',
+          name: 'products-edit',
+          component: ProductFormPage,
+        },
+        {
+          path: 'products/:id/bom',
+          name: 'products-bom',
+          component: ProductBomPage,
+        },
+        {
+          path: 'raw-materials',
+          name: 'raw-materials',
+          component: RawMaterialsListPage,
+        },
+        {
+          path: 'raw-materials/new',
+          name: 'raw-materials-new',
+          component: RawMaterialFormPage,
+        },
+        {
+          path: 'raw-materials/:id/edit',
+          name: 'raw-materials-edit',
+          component: RawMaterialFormPage,
+        },
+        {
+          path: 'production',
+          name: 'production',
+          component: ProductionPage,
+        },
+      ],
     },
   ],
 })

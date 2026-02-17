@@ -15,8 +15,14 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.13.5",
+    "pinia": "^3.0.4",
+    "tailwindcss": "^4.1.18",
     "vue": "^3.5.27",
-    "vue-router": "^5.0.1"
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.7.12"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
@@ -34,6 +40,7 @@
     "prettier": "3.8.1",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vite-plugin-vuetify": "^2.1.2",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vue-tsc": "^3.2.4"
   },
