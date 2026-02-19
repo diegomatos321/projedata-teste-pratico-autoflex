@@ -34,9 +34,8 @@ export const useProductStore = defineStore('productStore', {
       this.loading = true
       this.error = null
       try {
-        const product = await productService.create(payload)
-        this.products = [...this.products, product]
-        return product
+        await productService.create(payload)
+        await this.fetchProducts()
       } catch (error: unknown) {
         this.error = parseError(error)
         throw error
@@ -48,9 +47,8 @@ export const useProductStore = defineStore('productStore', {
       this.loading = true
       this.error = null
       try {
-        const updated = await productService.update(id, payload)
-        this.products = this.products.map((product) => (product.id === id ? updated : product))
-        return updated
+        await productService.update(id, payload)
+        await this.fetchProducts()
       } catch (error: unknown) {
         this.error = parseError(error)
         throw error

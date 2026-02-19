@@ -12,9 +12,8 @@ export const bomService = {
     const { data } = await api.get<ProductMaterial[]>(`${path}/product/${productId}`)
     return data
   },
-  async create(payload: ProductMaterialInput): Promise<ProductMaterial> {
-    const { data } = await api.post<ProductMaterial>(path, payload)
-    return data
+  async create(payload: ProductMaterialInput): Promise<void> {
+    await api.post<void>(path, payload)
   },
   async update(id: number, payload: ProductMaterialInput): Promise<ProductMaterial> {
     const { data } = await api.put<ProductMaterial>(`${path}/${id}`, payload)

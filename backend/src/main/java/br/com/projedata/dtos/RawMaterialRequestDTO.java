@@ -2,8 +2,8 @@ package br.com.projedata.dtos;
 
 import jakarta.validation.constraints.*;
 
-public class RawMaterialDTO {
-
+public class RawMaterialRequestDTO {
+	
     @NotBlank
     @Size(max = 40)
     public String code;

@@ -8,7 +8,8 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
-import br.com.projedata.dtos.RawMaterialDTO;
+import br.com.projedata.dtos.ProductMaterialResponseDTO;
+import br.com.projedata.dtos.RawMaterialResponseDTO;
 import br.com.projedata.models.RawMaterial;
 
 @Path("/api/raw-materials")
@@ -17,8 +18,19 @@ import br.com.projedata.models.RawMaterial;
 public class RawMaterialController {
 
     @GET
-    public List<RawMaterial> list() {
-        return RawMaterial.listAll();
+    public List<RawMaterialResponseDTO> list() {
+        return RawMaterial.<RawMaterial>listAll()
+        		.stream()
+        		.map(rm -> {
+        			RawMaterialResponseDTO dto = new RawMaterialResponseDTO();
+        			dto.id = rm.id;
+        			dto.code = rm.code;
+        			dto.name = rm.name;
+        			dto.stockQuantity = rm.stockQuantity;
+        			
+        			return dto;
+        		})
+        		.toList();
     }
 
     @GET
@@ -30,7 +42,7 @@ public class RawMaterialController {
 
     @POST
     @Transactional
-    public Response create(@Valid RawMaterialDTO dto) {
+    public Response create(@Valid RawMaterialResponseDTO dto) {
     	RawMaterial rawMaterial = new RawMaterial();
 		 rawMaterial.code = dto.code;
 		 rawMaterial.name = dto.name;
@@ -43,7 +55,7 @@ public class RawMaterialController {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response update(@PathParam("id") Long id, @Valid RawMaterialDTO dto) {
+    public Response update(@PathParam("id") Long id, @Valid RawMaterialResponseDTO dto) {
     	RawMaterial rawMaterial = (RawMaterial) RawMaterial.findByIdOptional(id)
     			.orElseThrow(() -> new NotFoundException("Product not found"));
 		 rawMaterial.code = dto.code;

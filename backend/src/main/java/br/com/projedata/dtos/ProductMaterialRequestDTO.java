@@ -2,9 +2,7 @@ package br.com.projedata.dtos;
 
 import jakarta.validation.constraints.*;
 
-public class ProductMaterialDTO {
-
-    public Long id;
+public class ProductMaterialRequestDTO {
 
     @NotNull
     public Long productId;

@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
+@Table(name = "raw_material")
 public class RawMaterial extends PanacheEntityBase {
 
     @Id

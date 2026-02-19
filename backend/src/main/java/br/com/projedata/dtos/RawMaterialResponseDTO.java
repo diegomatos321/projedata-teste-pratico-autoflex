@@ -1,9 +1,10 @@
 package br.com.projedata.dtos;
 
 import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
 
-public class ProductDTO {
+public class RawMaterialResponseDTO {
+	
+	public Long id;
 
     @NotBlank
     @Size(max = 40)
@@ -14,6 +15,6 @@ public class ProductDTO {
     public String name;
 
     @NotNull
-    @DecimalMin("0.01")
-    public BigDecimal price;
+    @Min(0)
+    public Integer stockQuantity;
 }

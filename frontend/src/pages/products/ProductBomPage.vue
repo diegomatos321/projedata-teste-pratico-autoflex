@@ -149,14 +149,11 @@ const rawMaterialOptions = computed(() => {
 
 const bomRows = computed(() => {
   return bomStore.productMaterials.map((association) => {
-    const rawMaterial = rawMaterialStore.rawMaterials.find(
-      (item) => item.id === association.rawMaterialId,
-    )
-
+    console.dir(association)
     return {
       id: association.id,
-      rawMaterialCode: rawMaterial?.code ?? `#${association.rawMaterialId}`,
-      rawMaterialName: rawMaterial?.name ?? 'Unknown material',
+      rawMaterialCode: association.rawMaterial?.code ?? 'Unknown code',
+      rawMaterialName: association.rawMaterial?.name ?? 'Unknown material',
       quantityRequired: association.quantityRequired,
       actions: '',
     }
@@ -231,7 +228,7 @@ function openEditBom(associationId: number) {
   }
 
   bomEditingId.value = associationId
-  bomForm.rawMaterialId = String(association.rawMaterialId)
+  bomForm.rawMaterialId = String(association.rawMaterial.id)
   bomForm.quantityRequired = String(association.quantityRequired)
   bomErrors.rawMaterialId = ''
   bomErrors.quantityRequired = ''

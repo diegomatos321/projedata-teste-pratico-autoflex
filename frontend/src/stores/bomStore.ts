@@ -34,9 +34,8 @@ export const useBomStore = defineStore('bomStore', {
       this.loading = true
       this.error = null
       try {
-        const created = await bomService.create(payload)
-        this.productMaterials = [...this.productMaterials, created]
-        return created
+        await bomService.create(payload)
+        await this.fetchByProduct(payload.productId)
       } catch (error: unknown) {
         this.error = parseError(error)
         throw error
@@ -48,11 +47,8 @@ export const useBomStore = defineStore('bomStore', {
       this.loading = true
       this.error = null
       try {
-        const updated = await bomService.update(id, payload)
-        this.productMaterials = this.productMaterials.map((item) =>
-          item.id === id ? updated : item,
-        )
-        return updated
+        await bomService.update(id, payload)
+        await this.fetchByProduct(payload.productId)
       } catch (error: unknown) {
         this.error = parseError(error)
         throw error

@@ -26,8 +26,8 @@ export interface RawMaterialInput {
 
 export interface ProductMaterial {
   id: number
-  productId: number
-  rawMaterialId: number
+  product: Product
+  rawMaterial: RawMaterial
   quantityRequired: number
 }
 
