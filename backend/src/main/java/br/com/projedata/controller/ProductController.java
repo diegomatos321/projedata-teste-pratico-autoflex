@@ -87,7 +87,7 @@ public class ProductController {
     	product.price = dto.price;
     	product.persist();
     	
-        return Response.created(null).build();
+        return Response.ok().build();
     }
 
     @PUT
