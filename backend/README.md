@@ -1,79 +1,305 @@
-# projeto-pratico
+# Stock Control API
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+API REST desenvolvida para controle de estoque de matérias-primas, cadastro de produtos e cálculo de sugestão de produção com base no estoque disponível.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+O sistema foi implementado utilizando Quarkus, Hibernate ORM com Panache e MySQL, seguindo o conceito de separação entre backend (API) e frontend conforme os requisitos do projeto.
 
-## Running the application in dev mode
+---
 
-You can run your application in dev mode that enables live coding using:
+## 1. Visão Geral
 
-```shell script
+Este projeto é uma API REST responsável por:
+
+* Gerenciar produtos
+* Gerenciar matérias-primas
+* Controlar a associação entre produtos e matérias-primas (Bill of Materials – BOM)
+* Calcular sugestões de produção com base no estoque disponível
+
+A aplicação foi construída utilizando Quarkus, com foco em:
+
+* Alta performance
+* Baixo consumo de memória
+* Inicialização rápida
+* Boa integração com JPA/Hibernate
+
+---
+
+## 2. Tecnologias Utilizadas
+
+
+### Framework
+
+* Quarkus (REST API)
+
+  * `quarkus-rest`
+  * `quarkus-rest-jackson`
+  * `quarkus-arc` (CDI)
+
+### Persistência
+
+* Hibernate ORM
+
+  * `quarkus-hibernate-orm`
+  * `quarkus-hibernate-orm-panache`
+* Hibernate Validator
+
+  * `quarkus-hibernate-validator`
+* Banco de dados:
+
+  * MySQL (`quarkus-jdbc-mysql`)
+
+### Documentação
+
+* SmallRye OpenAPI
+
+  * `quarkus-smallrye-openapi`
+
+### Testes
+
+* JUnit (`quarkus-junit`)
+* Rest-Assured
+
+---
+
+## 3. Decisões Arquiteturais
+
+### 3.1 Separação de Entidades
+
+As entidades principais foram separadas da seguinte forma:
+
+* Product
+* RawMaterial
+* ProductMaterial (entidade de associação)
+
+A modelagem utiliza uma relação 1:N entre:
+
+* Product → ProductMaterial
+* RawMaterial → ProductMaterial
+
+Isso evita um ManyToMany direto e permite armazenar o campo adicional:
+
+* quantityRequired
+
+Essa decisão facilita a implementação do conceito de Bill of Materials.
+
+---
+
+### 3.2 Camadas da Aplicação
+
+Estrutura lógica típica:
+
+```
+controlle
+repository (Panache)
+entity
+dto
+```
+
+Motivações:
+
+* Separação de responsabilidades
+* Facilidade de manutenção
+* Facilidade de testes
+* Evitar lógica de negócio dentro das entidades
+
+---
+
+### 3.3 Uso de DTOs
+
+DTOs foram utilizados para:
+
+* Evitar exposição direta das entidades
+* Evitar problemas de serialização (lazy loading)
+* Controlar o formato de resposta da API
+
+---
+
+### 3.4 Cálculo de Sugestão de Produção
+
+A lógica de sugestão de produção considera:
+
+* Estoque disponível de matérias-primas
+* Quantidade necessária por produto
+* Produto com maior valor agregado
+
+A responsabilidade do cálculo está no backend para:
+
+* Centralizar regra de negócio
+* Evitar inconsistências no frontend
+* Permitir futura reutilização por outros clientes (ex: mobile)
+
+---
+
+## 4. Requisitos
+
+* Java 17+
+* Maven 3.9+
+* Banco de dados configurado
+* Porta padrão: 8080
+
+---
+
+## 5. Configuração
+
+Arquivo: `application.properties`
+
+```properties
+quarkus.http.cors.enabled=true
+quarkus.http.cors.origins=http://localhost:5173
+quarkus.http.cors.headers=accept,authorization,content-type,x-requested-with
+quarkus.http.cors.methods=GET,POST,PUT,DELETE,OPTIONS
+```
+
+---
+
+## 6. Executando o Projeto
+
+Modo desenvolvimento:
+
+```bash
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+ou
 
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
+```bash
+mvn quarkus:dev
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+A aplicação ficará disponível em:
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```
+http://localhost:8080
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Console do Quarkus:
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+```
+http://localhost:8080/q/dev
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+---
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+## 7. Build para Produção
+
+```bash
+./mvnw clean package
 ```
 
-You can then execute your native executable with: `./target/projeto-pratico-1.0.0-SNAPSHOT-runner`
+Arquivo gerado:
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+```
+target/quarkus-app/
+```
 
-## Related Guides
+Executar:
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
+```bash
+java -jar target/quarkus-app/quarkus-run.jar
+```
 
-## Provided Code
+---
 
-### Hibernate ORM
+## 8. Melhorias Futuras
 
-Create your first JPA entity
+### 8.1 Endpoint Específico para Dashboard
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+Criar:
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+```
+GET /api/dashboard
+```
 
+Retornando:
 
-### REST
+* Total de produtos
+* Total de matérias-primas
+* Valor total possível de produção
+* Indicadores agregados
 
-Easily start your REST Web Services
+Benefícios:
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+* Reduz múltiplas consultas
+* Centraliza agregação no backend
+* Melhora performance
+
+---
+
+### 8.2 Autenticação com JWT
+
+Implementar:
+
+* Endpoint: POST /api/auth/login
+* Geração de JWT
+* Filtro de segurança
+* Proteção de endpoints
+
+Sugestão:
+
+* Usar quarkus-smallrye-jwt
+
+---
+
+### 8.3 Controle de Permissões (RBAC)
+
+Perfis:
+
+* ADMIN
+* USER
+
+Aplicar controle por:
+
+* Endpoint
+* Operação (ex: apenas ADMIN pode deletar)
+
+---
+
+### 8.4 Paginação e Filtros
+
+Atualmente os endpoints retornam listas completas.
+
+Melhoria:
+
+* Paginação com parâmetros:
+
+  * page
+  * size
+  * sort
+
+Exemplo:
+
+```
+GET /api/products?page=0&size=10
+```
+
+---
+
+### 8.5 Testes Automatizados
+
+Adicionar:
+
+* Testes unitários com JUnit
+* Testes de integração com @QuarkusTest
+* Testes de API com RestAssured
+
+---
+
+### 8.6 Observabilidade
+
+Adicionar:
+
+* Health checks
+* Métricas (Micrometer)
+* Logs estruturados
+* Integração com Prometheus / Grafana
+
+---
+
+### 8.7 Dockerização
+
+Criar:
+
+* Dockerfile para backend
+* Docker Compose com banco de dados
+* Configuração para ambiente de produção
+

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
-import DashboardPage from '@/pages/DashboardPage.vue'
-import ProductsListPage from '@/pages/products/ProductsListPage.vue'
-import ProductFormPage from '@/pages/products/ProductFormPage.vue'
-import ProductBomPage from '@/pages/products/ProductBomPage.vue'
-import RawMaterialsListPage from '@/pages/raw-materials/RawMaterialsListPage.vue'
-import RawMaterialFormPage from '@/pages/raw-materials/RawMaterialFormPage.vue'
-import ProductionPage from '@/pages/ProductionPage.vue'
+import DashboardPage from '@/views/DashboardPage.vue'
+import ProductsListPage from '@/views/products/ProductsListPage.vue'
+import ProductFormPage from '@/views/products/ProductFormPage.vue'
+import ProductBomPage from '@/views/products/ProductBomPage.vue'
+import RawMaterialsListPage from '@/views/raw-materials/RawMaterialsListPage.vue'
+import RawMaterialFormPage from '@/views/raw-materials/RawMaterialFormPage.vue'
+import ProductionPage from '@/views/ProductionPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
